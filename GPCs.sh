@@ -127,8 +127,6 @@ $singularity exec --cleanenv \
         -B $dir/tmp:$dir/tmp \
         -B $vcf_dir:$vcf_dir \
         -B $anno_base:$anno_base \
-	-B /hwfssz4/BC_COM_P9/F14HTSNCKF2360/HUMnfqR/AIVAR/Test/prepare/annotation/annovar/humandb/hg38:/hwfssz4/BC_COM_P9/F14HTSNCKF2360/HUMnfqR/AIVAR/Test/prepare/annotation/annovar/humandb/hg38 \
-	-B /zfssz5/BC_PS/P_bc_medea/database/human_hg38:/zfssz5/BC_PS/P_bc_medea/database/human_hg38 \
         -B $bed_path:$bed_path \
         $script_dir/bin/GPCs_v1.sif \
 perl /$script_dir/bin/table_annovar.pl -buildver $genome_version $dir/merge.$name.select.vcf.gz $anno_base --thread $thread --outfile $dir/tmp/$name -protocol refGene,ChinaMAP,gnomad211_exome,gnomad211_genome,1000g2015aug_all,1000g2015aug_eas,1000g2015aug_afr,1000g2015aug_amr,1000g2015aug_eur,1000g2015aug_sas,exac03,bravo-dbsnp-all,dbnsfp31a_interpro,dbscsnv11,avsnp150,dbnsfp42a,clinvar_20190305,gwasCatalog -operation g,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,r  -nastring .  -remove --onetranscript --vcfinput   && \
