@@ -219,9 +219,11 @@ for my $sam (keys %sam_ge){
 			print OUT3 "\tMutant" .  "$u_pos{$gene}{$sam}";
 			print MERGE "\tMutant";
 		}
-		elsif ($u_neg{$gene}{$sam} == scalar(keys %{$ge_double{$gene}{$sam}} ) ){
-			print OUT3 "\tWild_type";
-			print MERGE "\tWild_type";
+		elsif (  exists $u_neg{$gene}{$sam}){
+			if ($u_neg{$gene}{$sam} == scalar(keys %{$ge_double{$gene}{$sam}} ) ){
+				print OUT3 "\tWild_type";
+				print MERGE "\tWild_type";
+				}
 		}
 		else{
 			print OUT3 "\tNA";
