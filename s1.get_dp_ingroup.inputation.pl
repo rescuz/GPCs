@@ -166,7 +166,7 @@ for my $gmut (keys %mut_double){
 			elsif($tmp0 =~/0[\/\|]0/  ){
                                  $umut_neg{$gmut}{$sam}{$chrmut}="Wild_type";
                         }
-			else {  print "NA\t$sam\t$chrmut\t$mut_double{$gmut}{$sam}{$chrmut}\n";
+			else {  
 				$umut_na{$gmut}{$sam}{$chrmut}="NA";
 			}
 		} 
@@ -176,12 +176,13 @@ for my $gene (keys %ge_double){
 	for my $sam (keys %{$ge_double{$gene}}){
 		my $flag=0;
 		my @mutset;
+		$u_pos{$gene}{$sam}="";
 		for my $chrmut ( keys %{$ge_double{$gene}{$sam}}   ){
 			my ($tmp0)=(split/:/,$ge_double{$gene}{$sam}{$chrmut})[0];		
 			if(   $tmp0 !~/[01][\/\|][01]/  ) {
 				$flag++;
 			}
-			elsif ( $flag ==0 && $tmp0 =~/\d[\/\|]1|1[\/\|]0/ ){
+			elsif ( $tmp0 =~/\d[\/\|]1|1[\/\|]0/ ){
 				$chrmut =~ s/\.\t//g;
 				$chrmut =~ s/\t/-/g;
 				$u_pos{$gene}{$sam}=$u_pos{$gene}{$sam}.";"."$chrmut";
@@ -216,15 +217,13 @@ for my $sam (keys %sam_ge){
 	print OUT3 "$sam";
 	print MERGE "$sam";
 	for my $gene (keys %ge_double){
-		if (exists $u_pos{$gene}{$sam}){
+		if (exists $u_pos{$gene}{$sam} && $u_pos{$gene}{$sam} ne ""){
 			print OUT3 "\tMutant" .  "$u_pos{$gene}{$sam}";
 			print MERGE "\tMutant";
 		}
-		elsif (  exists $u_neg{$gene}{$sam}){
-			if ($u_neg{$gene}{$sam} == scalar(keys %{$ge_double{$gene}{$sam}} ) ){
-				print OUT3 "\tWild_type";
-				print MERGE "\tWild_type";
-				}
+		elsif ( exists $u_neg{$gene}{$sam} &&  $u_neg{$gene}{$sam} == scalar(keys %{$ge_double{$gene}{$sam}} ) ){
+			print OUT3 "\tWild_type";
+			print MERGE "\tWild_type";
 		}
 		else{
 			print OUT3 "\tNA";

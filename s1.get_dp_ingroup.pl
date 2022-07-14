@@ -160,10 +160,10 @@ for my $gmut (keys %mut_double){
 			elsif(($tmp2+$tmp1)>= $depth && $tmp0 =~/1\/1/ && ($tmp2/($tmp2+$tmp1) >=$ratio  &&  $tmp2 >=$reads_support ) ){
 				 $umut_hompos{$gmut}{$sam}{$chrmut}="Hom_Mutant";	
 			}
-			elsif(($tmp2+$tmp1)>= $depth && ($tmp0 =~/0\/0/ || ($tmp2/($tmp2+$tmp1) <$ratio  ||  $tmp2 <$reads_support )) ){
+			elsif(($tmp2+$tmp1)>= $depth && ($tmp0 =~/0\/0/ ) ){
                                  $umut_neg{$gmut}{$sam}{$chrmut}="Wild_type";
                         }
-			else {  print "NA\t$sam\t$chrmut\t$mut_double{$gmut}{$sam}{$chrmut}\n";
+			else {  
 				$umut_na{$gmut}{$sam}{$chrmut}="NA";
 			}
 		} 
@@ -173,18 +173,18 @@ for my $gene (keys %ge_double){
 	for my $sam (keys %{$ge_double{$gene}}){
 		my $flag=0;
 		my @mutset;
+		$u_pos{$gene}{$sam}="";
 		for my $chrmut ( keys %{$ge_double{$gene}{$sam}}   ){
 			my ($tmp0,$tmp1,$tmp2,$tmp3)=(split/:|,/,$ge_double{$gene}{$sam}{$chrmut})[0,1,2,3];		
-			if(   $tmp2+$tmp1 <$depth || $tmp2<$reads_support  ||  $tmp2/($tmp2+$tmp1) <$ratio ||   $tmp0 !~/[01]\/[01]/  ) {
+			if(   $tmp2+$tmp1 <$depth || $tmp0 =~/\./ || ($tmp2/($tmp2+$tmp1) <$ratio && $tmp0 !~/0\/0/ ) ||($tmp2 <$reads_support && $tmp0 !~/0\/0/  ) ) {
 				$flag++;
-				#print "$gene\t$sam\t$tmp2\n";
 			}
-			elsif ( $flag ==0 && $tmp0 =~/\d\/1|1\/0/ && ($tmp2/($tmp2+$tmp1) >=$ratio &&  $tmp2 >=$reads_support)){
+			elsif (  $tmp0 =~/[01]\/1|1\/0/ && ($tmp2/($tmp2+$tmp1) >=$ratio &&  $tmp2 >=$reads_support)){
 				$chrmut =~ s/\.\t//g;
 				$chrmut =~ s/\t/-/g;
 				$u_pos{$gene}{$sam}=$u_pos{$gene}{$sam}.";"."$chrmut";
 			}		
-			elsif ( $flag ==0 &&    ( $tmp0 =~/0\/0/ || ($tmp2/($tmp2+$tmp1) <$ratio && ($tmp2+$tmp1) >=$depth )  || (($tmp2+$tmp1) >=$depth && $tmp2 <$reads_support ) )){
+			elsif ( $flag ==0 &&    $tmp0 =~/0\/0/  ){
 				$u_neg{$gene}{$sam}++;
 			}
 
@@ -215,15 +215,13 @@ for my $sam (keys %sam_ge){
 	print OUT3 "$sam";
 	print MERGE "$sam";
 	for my $gene (keys %ge_double){
-		if (exists $u_pos{$gene}{$sam}){
+		if (exists $u_pos{$gene}{$sam}  && $u_pos{$gene}{$sam} ne "" ){
 			print OUT3 "\tMutant" .  "$u_pos{$gene}{$sam}";
 			print MERGE "\tMutant";
 		}
-		elsif (  exists $u_neg{$gene}{$sam}){
-			if ($u_neg{$gene}{$sam} == scalar(keys %{$ge_double{$gene}{$sam}} ) ){
-				print OUT3 "\tWild_type";
-				print MERGE "\tWild_type";
-				}
+		elsif ( exists $u_neg{$gene}{$sam}  && $u_neg{$gene}{$sam}== scalar(keys %{$ge_double{$gene}{$sam}})  ){ 
+			print OUT3 "\tWild_type";
+			print MERGE "\tWild_type"; 
 		}
 		else{
 			print OUT3 "\tNA";
