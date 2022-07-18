@@ -180,7 +180,7 @@ $singularity exec --cleanenv \
         -B $pheno_path:$pheno_path \
         -B $pheno_file_path:$pheno_file_path \
         $script_dir/bin/GPCs_v1.sif \
-Rscript $dir/mut_level/${name}.allmut_phenotype.plot.R -e "Sys.timezone()"  &
+Rscript $dir/mut_level/${name}.allmut_phenotype.plot.R &
 wait
 echo "Plot succeed !!!"
 if [ $remove_tmp == "1"  ] ; then rm -fr $dir/tmp ; else echo "tmp directory was retained !!!"  ; fi  && \
