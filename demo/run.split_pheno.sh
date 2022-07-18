@@ -31,7 +31,7 @@ do
                 -r 0.2 \\
                 -f /path/to/phenotype_file \\
 		-T /path/to/result \\
-                -p $dir2/test/tmp/$name.pheno.$i \\
+                -p $dir2/tmp/$name.pheno.$i \\
                 -M 1 \\
                 -m 1 \\
                 -N 1
