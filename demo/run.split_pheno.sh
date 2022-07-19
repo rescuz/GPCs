@@ -18,13 +18,14 @@ do
 	 if [ ! -d $dir2/tmp/  ] ; then mkdir -p $dir2/tmp/ ;fi
         sed -ne "1p" -e "${i1},${i2}p" /path/to/pheno.txt  >$dir2/tmp/$name.pheno.$i
 	if [ ! -d $dir2/pheno.$i  ] ; then mkdir -p $dir2/pheno.$i ;fi
-	echo "sh /*/GPC/GPCs.sh \\
+	echo -e "sh /*/GPC/GPCs.sh \\
                 -v /path/to/tmp.vcf.list \\  
                 -b $file \\
                 -i 20 \\
                 -n ChinaMAP.GPC.$name.pheno.$i \\
                 -d $dir2/pheno.$i  \\
-                -V /path/to/database/ \\
+                -V /path/to/vcf/ \\
+		-a /path/to/database \\
                 -S /share/app/singularity-3.2.0/bin/singularity \\
                 -t 10 \\
                 -s 4 \\
@@ -34,7 +35,7 @@ do
                 -p $dir2/tmp/$name.pheno.$i \\
                 -M 1 \\
                 -m 1 \\
-                -N 1
+       
                 echo "Still_waters_run_deep" > $dir/shell/ChinaMAP.GPC.$name.pheno.$i.sh.sign "  >$dir/shell/ChinaMAP.GPC.$name.pheno.$i.sh
                 ### change according to your cluster management system   ####
                 echo "qsub -cwd -l vf=20g,p=20 -q mgi_ruijin.q -P MGI_RUIJIN -binding linear:20  $dir/shell/ChinaMAP.GPC.$name.pheno.$i.sh "  >>$dir/qsu.sh
